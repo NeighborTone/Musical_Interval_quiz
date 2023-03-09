@@ -27,8 +27,6 @@ public class Note : MonoBehaviour
     {
         m_sharp = transform.GetChild(0).GetComponent<Image>();
         m_flatto = transform.GetChild(1).GetComponent<Image>();
-        var alphabet_str = m_noteInfo.alphabet.ToString();
-
         UpdateAccidental();
     }
 

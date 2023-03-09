@@ -36,8 +36,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
 
-    [SerializeField] MusicalNoteInfo m_firstNote = new(){ alphabet = MusicalAlphabet.C , noteName = NoteNames.C2};
-    [SerializeField] MusicalNoteInfo m_secondNote = new(){ alphabet = MusicalAlphabet.C , noteName = NoteNames.C2};
+    [SerializeField] MusicalNoteInfo m_firstNote = new(){ musicalAlphabet = "" , trueNoteName = NoteNames.C2};
+    [SerializeField] MusicalNoteInfo m_secondNote = new(){ musicalAlphabet = "" , trueNoteName = NoteNames.C2};
 
     static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
@@ -96,22 +96,24 @@ public class GameManager : MonoBehaviour
     {
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
         var right_index = UnityEngine.Random.Range(0, m_rightNote.Count);
+        var left_note_name = GetIndexToNoteName(left_index);
+        var right_note_name = GetIndexToNoteName(right_index);
 
         m_leftNote[left_index].gameObject.SetActive(true);
         m_leftNote[left_index].InitMusicalInfo(new()
         {
-            alphabet = MusicalAlphabet.C,
+            musicalAlphabet = left_note_name.ToString()[0].ToString(),
             noteNameNotAccid = GetIndexToNoteName(left_index), 
-            noteName = NoteNames.C2,
+            trueNoteName = NoteNames.C2,
             currentKey = m_currentKey
         });
 
         m_rightNote[right_index].gameObject.SetActive(true);
         m_rightNote[right_index].InitMusicalInfo(new()
         {
-            alphabet = MusicalAlphabet.C,
+            musicalAlphabet = right_note_name.ToString()[0].ToString(),
             noteNameNotAccid = GetIndexToNoteName(right_index), 
-            noteName = NoteNames.C2,
+            trueNoteName = NoteNames.C2,
             currentKey = m_currentKey
         });
     }
