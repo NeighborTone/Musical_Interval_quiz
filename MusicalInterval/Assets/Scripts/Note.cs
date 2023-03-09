@@ -13,13 +13,22 @@ public class Note : MonoBehaviour
     }
     Image m_sharp = null;
     Image m_flatto = null;
-
+    
     Accidental m_currentAccidental = Accidental.None;
+
+    [SerializeField] MusicalNoteInfo m_noteInfo = new();
+
+    public void InitMusicalInfo(MusicalNoteInfo musicalNoteInfo)
+    {
+        m_noteInfo = musicalNoteInfo;
+    }
 
     void Awake()
     {
         m_sharp = transform.GetChild(0).GetComponent<Image>();
         m_flatto = transform.GetChild(1).GetComponent<Image>();
+        var alphabet_str = m_noteInfo.alphabet.ToString();
+
         UpdateAccidental();
     }
 
