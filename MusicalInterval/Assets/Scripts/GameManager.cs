@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,7 +28,35 @@ public class ReadOnlyDrawer : PropertyDrawer
 #endif
 //
 
+//列挙型の乱数を取得する
+//https://baba-s.hatenablog.com/entry/2014/02/20/000000
+/// <summary>
+/// 列挙型に関する汎用クラス
+/// </summary>
+public static class EnumCommon
+{
+    private static readonly System.Random mRandom = new System.Random();  // 乱数
 
+    /// <summary>
+    /// 指定された列挙型の値をランダムに返します
+    /// </summary>
+    public static T Random<T>(int min, int max)
+    {
+        return Enum.GetValues(typeof(T))
+            .Cast<T>()
+            .OrderBy(c => mRandom.Next(min, max))
+            .FirstOrDefault();
+    }
+
+    /// <summary>
+    /// 指定された列挙型の値の数返します
+    /// </summary>
+    public static int GetLength<T>()
+    {
+        return Enum.GetValues(typeof(T)).Length;
+    }
+}
+//
 public class GameManager : MonoBehaviour
 {
     [SerializeField, ReadOnly] Key m_currentKey = Key.C;
@@ -36,8 +65,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
 
-    [SerializeField] MusicalNoteInfo m_firstNote = new(){ musicalAlphabet = "" , trueNoteName = NoteNames.C2};
-    [SerializeField] MusicalNoteInfo m_secondNote = new(){ musicalAlphabet = "" , trueNoteName = NoteNames.C2};
+    [SerializeField] MusicalNoteInfo m_firstNote = new(){ musicalAlphabet = "" , accidental = Accidental.None };
+    [SerializeField] MusicalNoteInfo m_secondNote = new(){ musicalAlphabet = "" , accidental = Accidental.None };
 
     static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
@@ -68,15 +97,15 @@ public class GameManager : MonoBehaviour
     //そもそもindexでいいのかわからんがとりあえずこのような形に
     //indexはト音記号の場合13 = A4。ヘ音記号の場合は13 = C3。
     //この関数で臨時記号は調整しない
-    NoteNamesNotAccidental GetIndexToNoteName(int index)
+    NoteNames GetIndexToNoteName(int index)
     {
-        int[] values = (int[])Enum.GetValues(typeof(NoteNamesNotAccidental));
-        NoteNamesNotAccidental result = NoteNamesNotAccidental.Invalid;
+        int[] values = (int[])Enum.GetValues(typeof(NoteNames));
+        NoteNames result = NoteNames.Invalid;
         foreach(int value in values)
         {
             if(index == value)
             {
-                result = (NoteNamesNotAccidental)value;
+                result = (NoteNames)value;
             }
         }
 
@@ -99,22 +128,30 @@ public class GameManager : MonoBehaviour
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
 
+        Accidental left_accid =  EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
+        Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
+        string left_accid_str = "";
+        string right_accid_str = "";
+
+        MusicalNoteInfo.AccidentalToString(left_accid, out left_accid_str);
+        MusicalNoteInfo.AccidentalToString(right_accid, out right_accid_str);
+
         m_leftNote[left_index].gameObject.SetActive(true);
         m_leftNote[left_index].InitMusicalInfo(new()
         {
-            musicalAlphabet = left_note_name.ToString()[0].ToString(),
             noteNameNotAccid = GetIndexToNoteName(left_index), 
-            trueNoteName = NoteNames.C2,
-            currentKey = m_currentKey
+            currentKey = m_currentKey,
+            accidental = left_accid,
+            musicalAlphabet = left_note_name.ToString()[0].ToString() + left_accid_str,
         });
 
         m_rightNote[right_index].gameObject.SetActive(true);
         m_rightNote[right_index].InitMusicalInfo(new()
         {
-            musicalAlphabet = right_note_name.ToString()[0].ToString(),
             noteNameNotAccid = GetIndexToNoteName(right_index), 
-            trueNoteName = NoteNames.C2,
-            currentKey = m_currentKey
+            currentKey = m_currentKey,
+            accidental = right_accid,
+            musicalAlphabet = right_note_name.ToString()[0].ToString() + right_accid_str,
         });
     }
 }
