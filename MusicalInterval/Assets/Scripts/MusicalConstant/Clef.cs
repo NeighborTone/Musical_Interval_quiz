@@ -1,4 +1,3 @@
-
 public enum Clef
 {
     G, //ト音記号
