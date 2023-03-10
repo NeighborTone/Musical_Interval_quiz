@@ -59,20 +59,20 @@ public static class EnumCommon
 //
 public class GameManager : MonoBehaviour
 {
-    [SerializeField, ReadOnly] Key m_currentKey = Key.C;
-    [SerializeField, ReadOnly] Clef m_currentClef = Clef.G;
+    [SerializeField] List<MusicalClef> m_clefList = new(3);
+    [SerializeField] Key m_currentKey = Key.C;
+    [SerializeField] Clef m_currentClef = Clef.G;
 
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
 
-    [SerializeField] MusicalNoteInfo m_firstNote = new(){ musicalAlphabet = "" , accidental = Accidental.None };
-    [SerializeField] MusicalNoteInfo m_secondNote = new(){ musicalAlphabet = "" , accidental = Accidental.None };
+    [SerializeField] MusicalNoteInfo m_firstNote = new() { musicalAlphabet = "", accidental = Accidental.None };
+    [SerializeField] MusicalNoteInfo m_secondNote = new() { musicalAlphabet = "", accidental = Accidental.None };
 
-    static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
-    static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
+    // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
+    // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
 
-    
-    void Awake()
+    void NoteAllHide()
     {
         foreach (var note in m_leftNote)
         {
@@ -83,14 +83,32 @@ public class GameManager : MonoBehaviour
         {
             note.gameObject.SetActive(false);
         }
-       
+
+    }
+
+    void SetClef()
+    {
+        foreach (var clef in m_clefList)
+        {
+            clef.gameObject.SetActive(false);
+            if(m_currentClef == clef.clef)
+            {
+                clef.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    void Awake()
+    {
+        SetClef();
+        NoteAllHide();
         GenerateQuiz();
     }
 
-    // Start is called before the first frame update
+
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -101,9 +119,9 @@ public class GameManager : MonoBehaviour
     {
         int[] values = (int[])Enum.GetValues(typeof(NoteNames));
         NoteNames result = NoteNames.Invalid;
-        foreach(int value in values)
+        foreach (int value in values)
         {
-            if(index == value)
+            if (index == value)
             {
                 result = (NoteNames)value;
             }
@@ -114,7 +132,11 @@ public class GameManager : MonoBehaviour
             case Clef.G:
                 result += 5 + 7; //ヘ音記号からト音記号に変換するには、五度上げるか四度下げる.+7はオクターブ
                 break;
-            default: break;  
+            case Clef.C:
+                result += 6; //ヘ音記号からハ音記号に変換するには、6度上げる
+                break;
+            default:
+                break;
         }
 
         return result;
@@ -128,7 +150,7 @@ public class GameManager : MonoBehaviour
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
 
-        Accidental left_accid =  EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
+        Accidental left_accid = EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
         Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
         string left_accid_str = "";
         string right_accid_str = "";
@@ -139,7 +161,7 @@ public class GameManager : MonoBehaviour
         m_leftNote[left_index].gameObject.SetActive(true);
         m_leftNote[left_index].InitMusicalInfo(new()
         {
-            noteNameNotAccid = GetIndexToNoteName(left_index), 
+            noteNameNotAccid = GetIndexToNoteName(left_index),
             currentKey = m_currentKey,
             accidental = left_accid,
             musicalAlphabet = left_note_name.ToString()[0].ToString() + left_accid_str,
@@ -148,7 +170,7 @@ public class GameManager : MonoBehaviour
         m_rightNote[right_index].gameObject.SetActive(true);
         m_rightNote[right_index].InitMusicalInfo(new()
         {
-            noteNameNotAccid = GetIndexToNoteName(right_index), 
+            noteNameNotAccid = GetIndexToNoteName(right_index),
             currentKey = m_currentKey,
             accidental = right_accid,
             musicalAlphabet = right_note_name.ToString()[0].ToString() + right_accid_str,
