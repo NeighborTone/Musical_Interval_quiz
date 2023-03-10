@@ -74,20 +74,6 @@ public class GameManager : MonoBehaviour
     // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
 
-
-    void ClacMusicalInterval(Note first, Note second, out MusicalInterval musicalInterval)
-    {
-
-
-
-        var max_degree = Math.Max((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
-        var min_degree = Math.Min((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
-
-        var degree = (max_degree - min_degree) + 1;
-
-        musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = degree };
-    }
-
     void NoteAllHide()
     {
         foreach (var note in m_leftNote)
@@ -163,7 +149,11 @@ public class GameManager : MonoBehaviour
     {
         int[] values = (int[])Enum.GetValues(typeof(EqualTemperament));
         int res = 0;
-
+        //ドイツ読みに変換
+        if(aplphabet == "B")
+        {
+            aplphabet = "H";
+        }
         foreach (int value in values)
         {
             var source_type = (EqualTemperament)value;
@@ -185,6 +175,16 @@ public class GameManager : MonoBehaviour
             }
         }
         return (EqualTemperament)res;
+    }
+
+    void ClacMusicalInterval(Note first, Note second, out MusicalInterval musicalInterval)
+    {
+        var max_degree = Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
+        var min_degree = Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
+
+        var degree = (max_degree - min_degree);
+
+        musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = degree };
     }
 
     void GenerateQuiz()

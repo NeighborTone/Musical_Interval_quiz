@@ -4,6 +4,7 @@
 //ドイツ語
 public enum EqualTemperament
 {
+    His = -1,
     C = 0,
     Cis,
     D,

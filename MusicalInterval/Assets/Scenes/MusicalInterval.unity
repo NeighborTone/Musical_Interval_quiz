@@ -371,7 +371,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &93488642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,7 +1271,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &257291550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,7 +1445,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &307818156
 GameObject:
   m_ObjectHideFlags: 0
@@ -2345,7 +2345,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &439134798
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,7 +3025,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &558201713
 GameObject:
   m_ObjectHideFlags: 0
@@ -3274,7 +3274,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &582975166
 GameObject:
   m_ObjectHideFlags: 0
@@ -3765,7 +3765,7 @@ MonoBehaviour:
   - {fileID: 1990755554}
   - {fileID: 1877859098}
   m_currentKey: 0
-  m_currentClef: 1
+  m_currentClef: 0
   m_leftNote:
   - {fileID: 5606066742492571523}
   - {fileID: 574698230}
@@ -3799,13 +3799,13 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
   m_secondNote:
     currentKey: 0
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
   m_musicalInterval:
     quality: 0
     interval: 0
@@ -3920,7 +3920,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &742712209
 GameObject:
   m_ObjectHideFlags: 0
@@ -4161,7 +4161,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &802627137
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,7 +4410,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &851087380
 GameObject:
   m_ObjectHideFlags: 0
@@ -4659,7 +4659,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &895799091
 GameObject:
   m_ObjectHideFlags: 0
@@ -4832,7 +4832,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &904640452
 GameObject:
   m_ObjectHideFlags: 0
@@ -5081,7 +5081,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &926206550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5254,7 +5254,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &951961416
 GameObject:
   m_ObjectHideFlags: 0
@@ -5579,7 +5579,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &988653161
 GameObject:
   m_ObjectHideFlags: 0
@@ -6208,7 +6208,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1128811268
 GameObject:
   m_ObjectHideFlags: 0
@@ -6382,7 +6382,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1134273038
 GameObject:
   m_ObjectHideFlags: 0
@@ -6565,7 +6565,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1155532469
 GameObject:
   m_ObjectHideFlags: 0
@@ -7009,7 +7009,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1275618725
 GameObject:
   m_ObjectHideFlags: 0
@@ -7106,7 +7106,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1309952345
 GameObject:
   m_ObjectHideFlags: 0
@@ -7279,7 +7279,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1331260665
 GameObject:
   m_ObjectHideFlags: 0
@@ -9045,7 +9045,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1623521953
 GameObject:
   m_ObjectHideFlags: 0
@@ -9142,7 +9142,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1630332753
 GameObject:
   m_ObjectHideFlags: 0
@@ -10323,7 +10323,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &1990755550
 GameObject:
   m_ObjectHideFlags: 0
@@ -10892,7 +10892,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &2063130840
 GameObject:
   m_ObjectHideFlags: 0
@@ -11290,7 +11290,7 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
 --- !u!1 &5389624941399768204
 GameObject:
   m_ObjectHideFlags: 0
@@ -11540,4 +11540,4 @@ MonoBehaviour:
     noteName: 
     noteNameNotAccid: 0
     accidental: 0
-    musicalAlphabet: 0
+    equalTemperament: 0
