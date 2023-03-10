@@ -171,7 +171,6 @@ public class GameManager : MonoBehaviour
                         res = value + (int)Accidental.Flatto;
                         break;
                 }
-
             }
         }
         return (EqualTemperament)res;
@@ -179,8 +178,8 @@ public class GameManager : MonoBehaviour
 
     void ClacMusicalInterval(Note first, Note second, out MusicalInterval musicalInterval)
     {
-        var max_degree = Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
-        var min_degree = Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
+        var max_degree = (EqualTemperament)Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
+        var min_degree = (EqualTemperament)Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
 
         var degree = (max_degree - min_degree);
 
@@ -204,7 +203,9 @@ public class GameManager : MonoBehaviour
         string right_accid_str = "";
 
         var left_alphabet_str = left_note_name.ToString()[0].ToString();
+        var left_note_num_str = left_note_name.ToString()[1].ToString();
         var right_alphabet_str = right_note_name.ToString()[0].ToString();
+        var right_note_num_str = right_note_name.ToString()[1].ToString();
 
         MusicalNoteInfo.AccidentalToString(left_accid, out left_accid_str);
         MusicalNoteInfo.AccidentalToString(right_accid, out right_accid_str);
@@ -223,7 +224,7 @@ public class GameManager : MonoBehaviour
             noteNameNotAccid = GetIndexToNoteName(left_index),
             currentKey = m_currentKey,
             accidental = left_accid,
-            noteName = left_alphabet_str + left_accid_str,
+            noteName = left_alphabet_str + left_accid_str + left_note_num_str,
             equalTemperament = left_temperament
 
         });
@@ -234,7 +235,7 @@ public class GameManager : MonoBehaviour
             noteNameNotAccid = GetIndexToNoteName(right_index),
             currentKey = m_currentKey,
             accidental = right_accid,
-            noteName = right_alphabet_str + right_accid_str,
+            noteName = right_alphabet_str + right_accid_str + right_note_num_str ,
             equalTemperament = right_temperament
         });
 

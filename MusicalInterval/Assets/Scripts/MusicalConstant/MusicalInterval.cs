@@ -3,7 +3,7 @@
 public struct MusicalInterval
 {
     //長、短、増、減、完全などの結合辞
-    //英語のwikipediaの音程のページにQualityと書いてあったのでこうなった
+    //英語のWikipediaの音程のページにQualityと書いてあったのでこうなった
     [System.Serializable]
     public enum MusicalQuality
     {

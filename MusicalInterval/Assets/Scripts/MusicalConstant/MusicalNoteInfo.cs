@@ -1,10 +1,9 @@
 
 //12平均律
-//とりあえず全部#で表す
 //ドイツ語
 public enum EqualTemperament
 {
-    His = -1,
+    Ces = -1, //例外...内部的にしか使わないから妥協、独自の音名使えば解決するが、なんか嫌だった
     C = 0,
     Cis,
     D,
@@ -17,6 +16,7 @@ public enum EqualTemperament
     A,
     Ais,
     H,
+    His
 }
 
 
