@@ -68,24 +68,24 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] MusicalNoteInfo m_firstNote = new() { noteName = "", accidental = Accidental.None };
     [SerializeField] MusicalNoteInfo m_secondNote = new() { noteName = "", accidental = Accidental.None };
-    
-    [SerializeField] MusicalInterval m_musicalInterval; 
-    
+
+    [SerializeField] MusicalInterval m_musicalInterval;
+
     // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
 
 
     void ClacMusicalInterval(Note first, Note second, out MusicalInterval musicalInterval)
     {
-       
 
-        
+
+
         var max_degree = Math.Max((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
         var min_degree = Math.Min((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
 
         var degree = (max_degree - min_degree) + 1;
 
-        musicalInterval = new(){quality = MusicalInterval.MusicalQuality.Major, interval = degree};
+        musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = degree };
     }
 
     void NoteAllHide()
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         foreach (var clef in m_clefList)
         {
             clef.gameObject.SetActive(false);
-            if(m_currentClef == clef.clef)
+            if (m_currentClef == clef.clef)
             {
                 clef.gameObject.SetActive(true);
             }
@@ -159,14 +159,14 @@ public class GameManager : MonoBehaviour
     }
 
 
-    int GetTrueNote(Accidental accidental, string aplphabet)
+    EqualTemperament GetNoteName(Accidental accidental, string aplphabet)
     {
-        int[] values = (int[])Enum.GetValues(typeof(MusicalAlphabet));
+        int[] values = (int[])Enum.GetValues(typeof(EqualTemperament));
         int res = 0;
 
         foreach (int value in values)
         {
-            var source_type = (MusicalAlphabet)value;
+            var source_type = (EqualTemperament)value;
             if (aplphabet == source_type.ToString())
             {
                 switch (accidental)
@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
 
             }
         }
-        return res;
+        return (EqualTemperament)res;
     }
 
     void GenerateQuiz()
@@ -197,12 +197,12 @@ public class GameManager : MonoBehaviour
         Accidental left_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
         Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
 
-        MusicalAlphabet left_alphabet;
-        MusicalAlphabet right_alphabet;
+        EqualTemperament left_temperament;
+        EqualTemperament right_temperament;
 
         string left_accid_str = "";
         string right_accid_str = "";
-        
+
         var left_alphabet_str = left_note_name.ToString()[0].ToString();
         var right_alphabet_str = right_note_name.ToString()[0].ToString();
 
@@ -215,8 +215,8 @@ public class GameManager : MonoBehaviour
         left_note.gameObject.SetActive(true);
         right_note.gameObject.SetActive(true);
 
-        left_alphabet = (MusicalAlphabet)GetTrueNote(left_accid, left_alphabet_str);
-        right_alphabet = (MusicalAlphabet)GetTrueNote(right_accid, right_alphabet_str);
+        left_temperament = GetNoteName(left_accid, left_alphabet_str);
+        right_temperament = GetNoteName(right_accid, right_alphabet_str);
 
         left_note.InitMusicalInfo(new()
         {
@@ -224,18 +224,18 @@ public class GameManager : MonoBehaviour
             currentKey = m_currentKey,
             accidental = left_accid,
             noteName = left_alphabet_str + left_accid_str,
-            musicalAlphabet = left_alphabet
-            
+            equalTemperament = left_temperament
+
         });
 
-      
+
         right_note.InitMusicalInfo(new()
         {
             noteNameNotAccid = GetIndexToNoteName(right_index),
             currentKey = m_currentKey,
             accidental = right_accid,
             noteName = right_alphabet_str + right_accid_str,
-            musicalAlphabet = right_alphabet
+            equalTemperament = right_temperament
         });
 
         ClacMusicalInterval(m_leftNote[left_index], m_rightNote[right_index], out m_musicalInterval);

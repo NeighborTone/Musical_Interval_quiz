@@ -1,7 +1,8 @@
 
+//12平均律
 //とりあえず全部#で表す
 //ドイツ語
-public enum MusicalAlphabet
+public enum EqualTemperament
 {
     C = 0,
     Cis,
@@ -62,7 +63,7 @@ public struct MusicalNoteInfo
     public string noteName;
     public NoteNames noteNameNotAccid;
     public Accidental accidental;
-    public MusicalAlphabet musicalAlphabet;
+    public EqualTemperament equalTemperament;
 
     static public void AccidentalToString(Accidental accidental, out string accidentalStr)
     {
