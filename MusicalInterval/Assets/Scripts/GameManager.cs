@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] MusicalInterval m_musicalInterval;
 
+    [SerializeField, ReadOnly] int m_octaveInterval = 0; 
+
     // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
 
@@ -183,6 +185,23 @@ public class GameManager : MonoBehaviour
         var min_degree = (EqualTemperament)Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
         ++min_degree;
         var semitone_num = ((int)max_degree - (int)min_degree); //半音の数から算出
+        m_octaveInterval = 0;
+        //オクターブ内に納める
+        if(semitone_num >= 12)
+        {
+            m_octaveInterval = 1;
+            semitone_num -= 12;
+        }
+        else if(semitone_num >= 24)
+        {
+            m_octaveInterval = 2;
+            semitone_num -= 24;
+        }
+
+        if(semitone_num <= -1)
+        {
+            semitone_num = 0;
+        }
 
         Debug.Log(semitone_num);
         switch(semitone_num)

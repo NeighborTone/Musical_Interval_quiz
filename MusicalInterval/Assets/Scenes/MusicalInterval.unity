@@ -3765,7 +3765,7 @@ MonoBehaviour:
   - {fileID: 1990755554}
   - {fileID: 1877859098}
   m_currentKey: 0
-  m_currentClef: 0
+  m_currentClef: 1
   m_leftNote:
   - {fileID: 5606066742492571523}
   - {fileID: 574698230}
