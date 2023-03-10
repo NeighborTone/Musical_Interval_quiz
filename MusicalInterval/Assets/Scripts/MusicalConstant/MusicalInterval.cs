@@ -14,6 +14,7 @@ public struct MusicalInterval
         Diminished,         //減
         DoubleAugmented,    //重増
         DoubleDiminished,   //重減
+        Tritone,            //増,減
     }
 
     public MusicalQuality quality;
