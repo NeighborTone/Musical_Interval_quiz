@@ -3900,7 +3900,7 @@ MonoBehaviour:
   - {fileID: 1990755554}
   - {fileID: 1877859098}
   m_currentKey: 0
-  m_currentClef: 0
+  m_currentClef: 1
   m_intervalText: {fileID: 495026765}
   m_leftNote:
   - {fileID: 5606066742492571523}
@@ -10502,7 +10502,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 56.299988, y: 10.4}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 137.29, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1990755552
 MonoBehaviour:
@@ -10517,7 +10517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

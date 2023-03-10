@@ -211,14 +211,14 @@ public class GameManager : MonoBehaviour
             case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 };     break;
             case 3:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 3 };     break;
             case 4:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 };   break;
-            case 5:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 4 }; break;
+            case 5:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 4 };   break;
             case 6:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 };   break;
-            case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 5 }; break;
+            case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 5 };   break;
             case 8:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 };     break;
             case 9:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 };     break;
             case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
             case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 7 };     break;
-            case 12: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 8 };     break;
+            case 12: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 8 };   break;
             default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = -999 };  break;
         }
 
