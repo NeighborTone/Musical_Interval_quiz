@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    EqualTemperament GetNoteName(Accidental accidental, string aplphabet)
+    EqualTemperament GetNoteName(Accidental accidental, string aplphabet, string noteNum)
     {
         int[] values = (int[])Enum.GetValues(typeof(EqualTemperament));
         int res = 0;
@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour
         {
             aplphabet = "H";
         }
+        aplphabet += noteNum;
         foreach (int value in values)
         {
             var source_type = (EqualTemperament)value;
@@ -180,10 +181,28 @@ public class GameManager : MonoBehaviour
     {
         var max_degree = (EqualTemperament)Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
         var min_degree = (EqualTemperament)Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
+        ++min_degree;
+        var semitone_num = ((int)max_degree - (int)min_degree); //半音の数から算出
 
-        var degree = (max_degree - min_degree);
+        Debug.Log(semitone_num);
+        switch(semitone_num)
+        {
+            case 0: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 }; return;
+            case 1: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 }; return;
+            case 2: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 }; return;
+            case 3: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 }; return;
+            case 4: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 }; return;
+            case 5: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 }; return;
+            case 6: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 4 }; return;
+            case 7: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 }; return;
+            case 8: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 5 }; return;
+            case 9: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 }; return;
+            case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 }; return;
+            case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 }; return;
+            default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = -999 }; return;
+        }
 
-        musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = degree };
+        
     }
 
     void GenerateQuiz()
@@ -193,8 +212,8 @@ public class GameManager : MonoBehaviour
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
 
-        Accidental left_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
-        Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+        Accidental left_accid = /*Accidental.None;*/ EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+        Accidental right_accid = /*Accidental.None;*/EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
 
         EqualTemperament left_temperament;
         EqualTemperament right_temperament;
@@ -216,8 +235,8 @@ public class GameManager : MonoBehaviour
         left_note.gameObject.SetActive(true);
         right_note.gameObject.SetActive(true);
 
-        left_temperament = GetNoteName(left_accid, left_alphabet_str);
-        right_temperament = GetNoteName(right_accid, right_alphabet_str);
+        left_temperament = GetNoteName(left_accid, left_alphabet_str, left_note_num_str);
+        right_temperament = GetNoteName(right_accid, right_alphabet_str, right_note_num_str);
 
         left_note.InitMusicalInfo(new()
         {

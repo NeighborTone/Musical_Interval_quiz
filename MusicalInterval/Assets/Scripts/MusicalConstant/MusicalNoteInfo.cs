@@ -1,22 +1,54 @@
 
 //12平均律
 //ドイツ語
+
+//例外...内部的にしか使わないから妥協、独自の音名使えば解決するが、なんか嫌だった
 public enum EqualTemperament
 {
-    Ces = -1, //例外...内部的にしか使わないから妥協、独自の音名使えば解決するが、なんか嫌だった
-    C = 0,
-    Cis,
-    D,
-    Dis,
-    E,
-    F,
-    Fis,
-    G,
-    Gis,
-    A,
-    Ais,
-    H,
-    His
+    E1 = 0,
+    F1,
+    Fis1,
+    G1,
+    Gis1,
+    A1,
+    Ais1,
+    H1,
+    C2,
+    Cis2,
+    D2,
+    Dis2,
+    E2,
+    F2,
+    Fis2,
+    G2,
+    Gis2,
+    A2,
+    Ais2,
+    H2,
+    C3,
+    Cis3,
+    D3,
+    Dis3,
+    E3,
+    F3,
+    Fis3,
+    G3,
+    Gis3,
+    A3,
+    Ais3,
+    H3,
+    C4,
+    Cis4,
+    D4,
+    Dis4,
+    E4,
+    F4,
+    Fis4,
+    G4,
+    Gis4,
+    A4,
+    Ais4,
+    Invalid,
 }
 
 
