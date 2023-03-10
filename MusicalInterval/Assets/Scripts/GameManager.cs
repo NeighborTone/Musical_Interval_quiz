@@ -71,7 +71,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] MusicalInterval m_musicalInterval;
 
-    [SerializeField, ReadOnly] int m_octaveInterval = 0; 
+    [SerializeField, ReadOnly] int m_octaveInterval = 0;
+    [SerializeField, ReadOnly] string m_intervalStr = ""; 
 
     // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
@@ -187,41 +188,37 @@ public class GameManager : MonoBehaviour
         var semitone_num = ((int)max_degree - (int)min_degree); //半音の数から算出
         m_octaveInterval = 0;
         //オクターブ内に納める
-        if(semitone_num >= 12)
+        if(semitone_num > 12)
         {
             m_octaveInterval = 1;
             semitone_num -= 12;
         }
-        else if(semitone_num >= 24)
+        else if(semitone_num > 24)
         {
             m_octaveInterval = 2;
             semitone_num -= 24;
         }
-
-        if(semitone_num <= -1)
-        {
-            semitone_num = 0;
-        }
-
+       
         Debug.Log(semitone_num);
         switch(semitone_num)
         {
-            case 0: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 }; return;
-            case 1: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 }; return;
-            case 2: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 }; return;
-            case 3: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 }; return;
-            case 4: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 }; return;
-            case 5: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 }; return;
-            case 6: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 4 }; return;
-            case 7: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 }; return;
-            case 8: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 5 }; return;
-            case 9: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 }; return;
-            case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 }; return;
-            case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 }; return;
-            default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = -999 }; return;
+            case -1: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
+            case 0:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 };     break;
+            case 1:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 };     break;
+            case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 };     break;
+            case 3:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 3 };     break;
+            case 4:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 };   break;
+            case 5:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 4 }; break;
+            case 6:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 };   break;
+            case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Augmented, interval = 5 }; break;
+            case 8:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 };     break;
+            case 9:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 };     break;
+            case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
+            case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 7 };     break;
+            default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = -999 };  break;
         }
 
-        
+        m_intervalStr = musicalInterval.intervalName;
     }
 
     void GenerateQuiz()
@@ -256,6 +253,11 @@ public class GameManager : MonoBehaviour
 
         left_temperament = GetNoteName(left_accid, left_alphabet_str, left_note_num_str);
         right_temperament = GetNoteName(right_accid, right_alphabet_str, right_note_num_str);
+
+
+        // デバッグ用（見た目は変わらず内部の音程だけ変わるので注意）
+        // left_temperament = GetNoteName(Accidental.None, "G", "4");
+        // right_temperament = GetNoteName(Accidental.None, "F", "4");
 
         left_note.InitMusicalInfo(new()
         {
