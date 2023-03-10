@@ -66,11 +66,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
 
-    [SerializeField] MusicalNoteInfo m_firstNote = new() { musicalAlphabet = "", accidental = Accidental.None };
-    [SerializeField] MusicalNoteInfo m_secondNote = new() { musicalAlphabet = "", accidental = Accidental.None };
-
+    [SerializeField] MusicalNoteInfo m_firstNote = new() { noteName = "", accidental = Accidental.None };
+    [SerializeField] MusicalNoteInfo m_secondNote = new() { noteName = "", accidental = Accidental.None };
+    
+    [SerializeField] MusicalInterval m_musicalInterval; 
+    
     // static readonly NoteNames G_CLEF_LOW = NoteNames.C2;
     // static readonly NoteNames F_CLEF_LOW = NoteNames.E1;
+
+
+    void ClacMusicalInterval(Note first, Note second, out MusicalInterval musicalInterval)
+    {
+       
+
+        
+        var max_degree = Math.Max((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
+        var min_degree = Math.Min((int)first.noteInfo.noteNameNotAccid, (int)second.noteInfo.noteNameNotAccid);
+
+        var degree = (max_degree - min_degree) + 1;
+
+        musicalInterval = new(){quality = MusicalInterval.MusicalQuality.Major, interval = degree};
+    }
 
     void NoteAllHide()
     {
@@ -143,6 +159,34 @@ public class GameManager : MonoBehaviour
     }
 
 
+    int GetTrueNote(Accidental accidental, string aplphabet)
+    {
+        int[] values = (int[])Enum.GetValues(typeof(MusicalAlphabet));
+        int res = 0;
+
+        foreach (int value in values)
+        {
+            var source_type = (MusicalAlphabet)value;
+            if (aplphabet == source_type.ToString())
+            {
+                switch (accidental)
+                {
+                    case Accidental.None:
+                        res = value + (int)Accidental.None;
+                        break;
+                    case Accidental.Sharp:
+                        res = value + (int)Accidental.Sharp;
+                        break;
+                    case Accidental.Flatto:
+                        res = value + (int)Accidental.Flatto;
+                        break;
+                }
+
+            }
+        }
+        return res;
+    }
+
     void GenerateQuiz()
     {
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
@@ -150,30 +194,50 @@ public class GameManager : MonoBehaviour
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
 
-        Accidental left_accid = EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
-        Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.None, (int)Accidental.Flatto + 1);
+        Accidental left_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+        Accidental right_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+
+        MusicalAlphabet left_alphabet;
+        MusicalAlphabet right_alphabet;
+
         string left_accid_str = "";
         string right_accid_str = "";
+        
+        var left_alphabet_str = left_note_name.ToString()[0].ToString();
+        var right_alphabet_str = right_note_name.ToString()[0].ToString();
 
         MusicalNoteInfo.AccidentalToString(left_accid, out left_accid_str);
         MusicalNoteInfo.AccidentalToString(right_accid, out right_accid_str);
 
-        m_leftNote[left_index].gameObject.SetActive(true);
-        m_leftNote[left_index].InitMusicalInfo(new()
+        var left_note = m_leftNote[left_index];
+        var right_note = m_rightNote[right_index];
+
+        left_note.gameObject.SetActive(true);
+        right_note.gameObject.SetActive(true);
+
+        left_alphabet = (MusicalAlphabet)GetTrueNote(left_accid, left_alphabet_str);
+        right_alphabet = (MusicalAlphabet)GetTrueNote(right_accid, right_alphabet_str);
+
+        left_note.InitMusicalInfo(new()
         {
             noteNameNotAccid = GetIndexToNoteName(left_index),
             currentKey = m_currentKey,
             accidental = left_accid,
-            musicalAlphabet = left_note_name.ToString()[0].ToString() + left_accid_str,
+            noteName = left_alphabet_str + left_accid_str,
+            musicalAlphabet = left_alphabet
+            
         });
 
-        m_rightNote[right_index].gameObject.SetActive(true);
-        m_rightNote[right_index].InitMusicalInfo(new()
+      
+        right_note.InitMusicalInfo(new()
         {
             noteNameNotAccid = GetIndexToNoteName(right_index),
             currentKey = m_currentKey,
             accidental = right_accid,
-            musicalAlphabet = right_note_name.ToString()[0].ToString() + right_accid_str,
+            noteName = right_alphabet_str + right_accid_str,
+            musicalAlphabet = right_alphabet
         });
+
+        ClacMusicalInterval(m_leftNote[left_index], m_rightNote[right_index], out m_musicalInterval);
     }
 }

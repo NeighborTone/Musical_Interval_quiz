@@ -9,6 +9,8 @@ public class Note : MonoBehaviour
     Image m_flatto = null;
     [SerializeField] MusicalNoteInfo m_noteInfo = new();
 
+    public MusicalNoteInfo noteInfo { get {return m_noteInfo;} private set {} }
+
     public void InitMusicalInfo(MusicalNoteInfo musicalNoteInfo)
     {
         m_noteInfo = musicalNoteInfo;
