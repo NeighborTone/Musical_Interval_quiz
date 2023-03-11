@@ -82,7 +82,7 @@ public enum NoteNames
 
 public enum Accidental //臨時記号
 {
-    None = 0,
+    Natural = 0,
     Sharp = 1,
     Flatto = -1,
 }

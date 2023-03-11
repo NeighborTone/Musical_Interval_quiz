@@ -27,7 +27,7 @@ public class Note : MonoBehaviour
     {
         switch (m_noteInfo.accidental)
         {
-            case Accidental.None:
+            case Accidental.Natural:
                 m_sharp.gameObject.SetActive(false);
                 m_flatto.gameObject.SetActive(false);
                 break;
