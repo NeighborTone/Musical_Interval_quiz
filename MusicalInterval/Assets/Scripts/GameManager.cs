@@ -106,18 +106,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Awake()
+    public void InitQuiz()
     {
         SetClef();
         NoteAllHide();
         GenerateQuiz();
     }
 
-
-    void Update()
+    void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        InitQuiz();
     }
 
     //そもそもindexでいいのかわからんがとりあえずこのような形に
@@ -187,16 +185,16 @@ public class GameManager : MonoBehaviour
     {
         var max_degree = (EqualTemperament)Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
         var min_degree = (EqualTemperament)Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
-        ++min_degree;
+        ++min_degree; //実際の半音の数え方にしたいのでインクリメント。以下の計算で完全１度が-1になるので注意
         var semitone_num = ((int)max_degree - (int)min_degree); //半音の数から算出
         m_octaveInterval = 0;
         //オクターブ内に納める
-        if(semitone_num > 12)
+        if (semitone_num > 12)
         {
             m_octaveInterval = 1;
             semitone_num -= 12;
         }
-        else if(semitone_num > 24)
+        else if (semitone_num > 24)
         {
             m_octaveInterval = 2;
             semitone_num -= 24;
@@ -206,20 +204,20 @@ public class GameManager : MonoBehaviour
         switch(semitone_num)
         {
             case -1: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
-            case 0:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 };     break;
-            case 1:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 };     break;
-            case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 };     break;
-            case 3:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 3 };     break;
-            case 4:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 };   break;
-            case 5:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 4 };   break;
-            case 6:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 };   break;
-            case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 5 };   break;
-            case 8:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 };     break;
+            case 0: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
+            case 1:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 };     break;
+            case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 };     break;
+            case 3:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 };     break;
+            case 4:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 3 };     break;
+            case 5:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 4 };   break;
+            case 6:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Tritone, interval = 4 };   break;
+            case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 };   break;
+            case 8:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 };   break;
             case 9:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 };     break;
-            case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
+            case 10:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
             case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 7 };     break;
-            case 12: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 8 };   break;
-            default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = -999 };  break;
+            case 12: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 8 };     break;
+            default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = -999 };  break;
         }
 
         m_intervalStr = musicalInterval.intervalName;
