@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Clef m_currentClef = Clef.G;
 
     [SerializeField] TextMeshProUGUI m_intervalText;
+    [SerializeField] TextMeshProUGUI m_semitoneText;
 
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
@@ -185,7 +186,7 @@ public class GameManager : MonoBehaviour
     {
         var max_degree = (EqualTemperament)Math.Max((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
         var min_degree = (EqualTemperament)Math.Min((int)first.noteInfo.equalTemperament, (int)second.noteInfo.equalTemperament);
-        ++min_degree; //実際の半音の数え方にしたいのでインクリメント。以下の計算で完全１度が-1になるので注意
+
         var semitone_num = ((int)max_degree - (int)min_degree); //半音の数から算出
         m_octaveInterval = 0;
         //オクターブ内に納める
@@ -203,7 +204,6 @@ public class GameManager : MonoBehaviour
         Debug.Log(semitone_num);
         switch(semitone_num)
         {
-            case -1: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
             case 0: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
             case 1:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 };     break;
             case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 };     break;
@@ -222,6 +222,7 @@ public class GameManager : MonoBehaviour
 
         m_intervalStr = musicalInterval.intervalName;
         m_intervalText.text = musicalInterval.intervalName;
+        m_semitoneText.SetText("半音{0}個", semitone_num);
     }
 
     void GenerateQuiz()
