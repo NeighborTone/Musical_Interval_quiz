@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_intervalText;
     [SerializeField] TextMeshProUGUI m_semitoneText;
     [SerializeField] Toggle m_accidToggle;
+    [SerializeField] TMP_Dropdown m_clefDropdown;
 
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
@@ -100,6 +101,12 @@ public class GameManager : MonoBehaviour
 
     void SetClef()
     {
+        switch(m_clefDropdown.value)
+        {
+            case 0: m_currentClef = Clef.G; break;
+            case 1: m_currentClef = Clef.C; break;
+            case 2: m_currentClef = Clef.F; break;
+        }
         foreach (var clef in m_clefList)
         {
             clef.gameObject.SetActive(false);
@@ -117,6 +124,7 @@ public class GameManager : MonoBehaviour
 
     public void CloseSettingCanvas()
     {
+        InitQuiz();
         m_settingCanvas.SetActive(false);
     }
 
@@ -213,8 +221,7 @@ public class GameManager : MonoBehaviour
             m_octaveInterval = 2;
             semitone_num -= 24;
         }
-       
-        Debug.Log(semitone_num);
+        
         switch(semitone_num)
         {
             case 0:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
