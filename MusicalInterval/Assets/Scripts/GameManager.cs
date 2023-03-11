@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -64,8 +65,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Key m_currentKey = Key.C;
     [SerializeField] Clef m_currentClef = Clef.G;
 
+    [SerializeField] GameObject m_settingCanvas;
     [SerializeField] TextMeshProUGUI m_intervalText;
     [SerializeField] TextMeshProUGUI m_semitoneText;
+    [SerializeField] Toggle m_accidToggle;
 
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
@@ -105,6 +108,16 @@ public class GameManager : MonoBehaviour
                 clef.gameObject.SetActive(true);
             }
         }
+    }
+
+    public void OpenSettingCanvas()
+    {
+        m_settingCanvas.SetActive(true);
+    }
+
+    public void CloseSettingCanvas()
+    {
+        m_settingCanvas.SetActive(false);
     }
 
     public void InitQuiz()
@@ -204,7 +217,7 @@ public class GameManager : MonoBehaviour
         Debug.Log(semitone_num);
         switch(semitone_num)
         {
-            case 0: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
+            case 0:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 1 };   break;
             case 1:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 2 };     break;
             case 2:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 2 };     break;
             case 3:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 3 };     break;
@@ -214,7 +227,7 @@ public class GameManager : MonoBehaviour
             case 7:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 5 };   break;
             case 8:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 6 };   break;
             case 9:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 6 };     break;
-            case 10:  musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
+            case 10: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Minor, interval = 7 };     break;
             case 11: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Major, interval = 7 };     break;
             case 12: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = 8 };     break;
             default: musicalInterval = new() { quality = MusicalInterval.MusicalQuality.Perfect, interval = -999 };  break;
@@ -232,8 +245,20 @@ public class GameManager : MonoBehaviour
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
 
-        Accidental left_accid = /*Accidental.None;*/ EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
-        Accidental right_accid = /*Accidental.None;*/EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+        Accidental left_accid;
+        Accidental right_accid;
+
+        if (m_accidToggle.isOn)
+        {
+            left_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+            right_accid = EnumCommon.Random<Accidental>((int)Accidental.Flatto, (int)Accidental.Sharp + 1);
+        }
+        else
+        {
+            left_accid = Accidental.None;
+            right_accid = Accidental.None;
+        }
+
 
         EqualTemperament left_temperament;
         EqualTemperament right_temperament;
