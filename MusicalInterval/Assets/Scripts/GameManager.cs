@@ -74,6 +74,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_naturalIntervalText;
     [SerializeField] TextMeshProUGUI m_enharmonicIntervalText;
     [SerializeField] TextMeshProUGUI m_semitoneText;
+    [SerializeField] TextMeshProUGUI m_octaveText;
+
     [SerializeField] Toggle m_accidToggle;
     [SerializeField] TMP_Dropdown m_clefDropdown;
 
@@ -90,7 +92,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [SerializeField] MusicalInterval m_musicalIntervalEnharmonic;
 
-    [SerializeField, ReadOnly] int m_octaveInterval = 0;
+    int m_octaveInterval = 0;
+
 
     public bool IsAccidental { get {return m_accidToggle.isOn;} private set{} }
 
@@ -304,9 +307,43 @@ public class GameManager : MonoBehaviour
             CalcEnharmonic(hi_note_info, low_note_info);
         }
 
+        if(semitone_num == 0)
+        {
+            m_musicalInterval.quality = MusicalInterval.MusicalQuality.Unison;
+        }
+
+        m_octaveText.gameObject.SetActive(m_octaveInterval > 0 ? true : false);
         m_intervalText.SetText(m_musicalInterval.intervalName);
         m_semitoneText.SetText("半音{0}個", semitone_num);
 
+    }
+    
+    bool IsAugmented(Accidental hiAccid, Accidental lowAccid)
+    {
+        return ((hiAccid == Accidental.Sharp && lowAccid == Accidental.Natural) || 
+                 lowAccid == Accidental.Flatto && hiAccid == Accidental.Natural);
+    }
+
+    bool IsDiminished(Accidental hiAccid, Accidental lowAccid)
+    {
+        return ((hiAccid == Accidental.Flatto && lowAccid == Accidental.Natural) ||
+                 lowAccid == Accidental.Sharp && hiAccid == Accidental.Natural);
+    }
+
+    bool IsSameInterval(Accidental hiAccid, Accidental lowAccid)
+    {
+        return ((hiAccid == Accidental.Sharp && lowAccid == Accidental.Sharp) ||
+                 lowAccid == Accidental.Flatto && hiAccid == Accidental.Flatto);
+    }
+
+    bool IsDoubleAugmented(Accidental hiAccid, Accidental lowAccid)
+    {
+        return (hiAccid == Accidental.Sharp && lowAccid == Accidental.Flatto);
+    }
+
+    bool IsDoubleDiminished(Accidental hiAccid, Accidental lowAccid)
+    {
+        return (hiAccid == Accidental.Flatto && lowAccid == Accidental.Sharp);
     }
 
     /// <summary>
@@ -342,55 +379,53 @@ public class GameManager : MonoBehaviour
 
         //音程の性質を取得するために臨時記号がない状態で音程を算出
         MusicalInterval interval_not_accid;
+
+        var semitone_num = ((int)hi_note_name_not_accid - (int)low_note_name_not_accid); //半音の数から算出
+
+        //オクターブ内に納める
+        if (semitone_num > 12)
         {
-            var semitone_num = ((int)hi_note_name_not_accid - (int)low_note_name_not_accid); //半音の数から算出
-
-            //オクターブ内に納める
-            if (semitone_num > 12)
-            {
-                semitone_num -= 12;
-            }
-            else if (semitone_num > 24)
-            {
-                semitone_num -= 24;
-            }
-
-
-            CreateMusicalInterval(Math.Abs(semitone_num), out interval_not_accid);
+            semitone_num -= 12;
+        }
+        else if (semitone_num > 24)
+        {
+            semitone_num -= 24;
         }
 
+        CreateMusicalInterval(Math.Abs(semitone_num), out interval_not_accid);
 
-        if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Perfect)
+        if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Perfect) //完全系
         {
             //高い音にのみシャープ。または低い音にのみフラットなら増○度
-            if((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Natural) || 
-                low_note_name_accid == Accidental.Flatto && hi_note_name_accid == Accidental.Natural)
+            if(IsAugmented(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Augmented;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
             }
             //高い音にのみフラット。または低い音にのみシャープなら減○度
-            else if ((hi_note_name_accid == Accidental.Flatto && low_note_name_accid == Accidental.Natural) ||
-                      low_note_name_accid == Accidental.Sharp && hi_note_name_accid == Accidental.Natural)
+            else if (IsDiminished(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
             }
             //両方の音にシャープ。または両方の音にフラットで完全○度(変わらない)
-            else if ((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Sharp) ||
-                      low_note_name_accid == Accidental.Flatto && hi_note_name_accid == Accidental.Flatto)
+            else if(IsSameInterval(hi_note_name_accid, low_note_name_accid))
             {
-                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Perfect;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+                if(semitone_num == 0)
+                {
+                    m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Unison;
+                }
             }
             //高い音にシャープかつ低い音にフラットで重増○度
-            else if ((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Flatto))
+            else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
             }
             //高い音にフラットかつ低い音にシャープで重減○度
-            else if ((hi_note_name_accid == Accidental.Flatto && low_note_name_accid == Accidental.Sharp))
+            else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleDiminished;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
@@ -399,19 +434,136 @@ public class GameManager : MonoBehaviour
             else
             {
                 m_musicalIntervalEnharmonic = interval_not_accid;
+                if(semitone_num == 0)
+                {
+                    m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Unison;
+                }
             }
         }
-        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Major)
+        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Major) //メジャー系
         {
+            //高い音にのみシャープ。または低い音にのみフラットなら増○度
+            if(IsAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Augmented;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にのみフラット。または低い音にのみシャープなら短○度
+            else if (IsDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Minor;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //両方の音にシャープ。または両方の音にフラットで長○度(変わらない)
+            else if(IsSameInterval(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Major;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にシャープかつ低い音にフラットで重増○度
+            else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にフラットかつ低い音にシャープで減○度
+            else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //臨時記号なし
+            else
+            {
+                m_musicalIntervalEnharmonic = interval_not_accid;
+            }
 
         }
-        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Minor)
+        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Minor) //マイナー系
         {
-            
+            //高い音にのみシャープ。または低い音にのみフラットなら長○度
+            if(IsAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Major;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にのみフラット。または低い音にのみシャープなら減○度
+            else if (IsDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //両方の音にシャープ。または両方の音にフラットで長○度(変わらない)
+            else if(IsSameInterval(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Minor;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にシャープかつ低い音にフラットで増○度
+            else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Augmented;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にフラットかつ低い音にシャープで重減○度
+            else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleDiminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //臨時記号なし
+            else
+            {
+                m_musicalIntervalEnharmonic = interval_not_accid;
+            } 
         }
-    
+        else //トライトーン(増4,減5)本当に以下の処理でいいのかかなり怪しい...プログラム的にはFとBのとき(増4度)にしか来ない？
+        {
+            //高い音にのみシャープ。または低い音にのみフラットなら重増4度？(完全5度の異名同音？)
+            if(IsAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
+                m_musicalIntervalEnharmonic.interval = 4;
+            }
+            //高い音にのみフラット。または低い音にのみシャープなら減○度?(完全4度の異名同音？)
+            else if (IsDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Perfect;
+                m_musicalIntervalEnharmonic.interval = 4;
+            }
+            //両方の音にシャープ。または両方の音にフラット(変わらない)
+            else if(IsSameInterval(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Tritone;
+                m_musicalIntervalEnharmonic.interval = 4;
+            }
+            //高い音にシャープかつ低い音にフラットで長3度？(完全4度から半音3つ分広がるので多分短6度でいいはず)
+            else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Minor;
+                m_musicalIntervalEnharmonic.interval = 6;
+            }
+            //高い音にフラットかつ低い音にシャープで長3度？(完全4度から半音3つ分狭くなるので多分長3度でいいはず)
+            else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Major;
+                m_musicalIntervalEnharmonic.interval = 3;
+            }            
+            //臨時記号なし
+            else
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Tritone;
+                m_musicalIntervalEnharmonic.interval = 4;
+            } 
+        }
+
+        if (semitone_num == 0)
+        {
+            interval_not_accid.quality = MusicalInterval.MusicalQuality.Unison;
+        }
+
         m_naturalIntervalText.SetText("Natural:" + interval_not_accid.intervalName);
-        m_enharmonicIntervalText.SetText(m_musicalIntervalEnharmonic.intervalName);
+        m_enharmonicIntervalText.SetText("Enharmonic:" + m_musicalIntervalEnharmonic.intervalName);
     }
 
     void GenerateQuiz()
