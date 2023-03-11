@@ -187,7 +187,6 @@ public class GameManager : MonoBehaviour
     {
         int[] values = (int[])Enum.GetValues(typeof(EqualTemperament));
         int res = 0;
-        //ドイツ読みに変換
         foreach (int value in values)
         {
             var source_type = (EqualTemperament)value;
@@ -337,29 +336,80 @@ public class GameManager : MonoBehaviour
 
         //高い音符の五線譜上の音(位置)を取得
         var hi_note_name_not_accid = GetNoteNameRemoveAccidental(hi_note_name_accid, hi.noteInfo.equalTemperament);
-        
+
         //低い音符の五線譜上の音(位置)を取得
         var low_note_name_not_accid = GetNoteNameRemoveAccidental(low_note_name_accid, low.noteInfo.equalTemperament);
 
-        var semitone_num = ((int)hi_note_name_not_accid - (int)low_note_name_not_accid); //半音の数から算出
-
-        //オクターブ内に納める
-        if (semitone_num > 12)
-        {
-            semitone_num -= 12;
-        }
-        else if (semitone_num > 24)
-        {
-            semitone_num -= 24;
-        }
-
         //音程の性質を取得するために臨時記号がない状態で音程を算出
         MusicalInterval interval_not_accid;
-        CreateMusicalInterval(semitone_num, out interval_not_accid);
+        {
+            var semitone_num = ((int)hi_note_name_not_accid - (int)low_note_name_not_accid); //半音の数から算出
+
+            //オクターブ内に納める
+            if (semitone_num > 12)
+            {
+                semitone_num -= 12;
+            }
+            else if (semitone_num > 24)
+            {
+                semitone_num -= 24;
+            }
 
 
+            CreateMusicalInterval(Math.Abs(semitone_num), out interval_not_accid);
+        }
 
-        m_musicalIntervalEnharmonic = interval_not_accid;
+
+        if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Perfect)
+        {
+            //高い音にのみシャープ。または低い音にのみフラットなら増○度
+            if((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Natural) || 
+                low_note_name_accid == Accidental.Flatto && hi_note_name_accid == Accidental.Natural)
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Augmented;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にのみフラット。または低い音にのみシャープなら減○度
+            else if ((hi_note_name_accid == Accidental.Flatto && low_note_name_accid == Accidental.Natural) ||
+                      low_note_name_accid == Accidental.Sharp && hi_note_name_accid == Accidental.Natural)
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //両方の音にシャープ。または両方の音にフラットで完全○度(変わらない)
+            else if ((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Sharp) ||
+                      low_note_name_accid == Accidental.Flatto && hi_note_name_accid == Accidental.Flatto)
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にシャープかつ低い音にフラットで重増○度
+            else if ((hi_note_name_accid == Accidental.Sharp && low_note_name_accid == Accidental.Flatto))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //高い音にフラットかつ低い音にシャープで重減○度
+            else if ((hi_note_name_accid == Accidental.Flatto && low_note_name_accid == Accidental.Sharp))
+            {
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleDiminished;
+                m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
+            }
+            //臨時記号なし
+            else
+            {
+                m_musicalIntervalEnharmonic = interval_not_accid;
+            }
+        }
+        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Major)
+        {
+
+        }
+        else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Minor)
+        {
+            
+        }
+    
         m_naturalIntervalText.SetText("Natural:" + interval_not_accid.intervalName);
         m_enharmonicIntervalText.SetText(m_musicalIntervalEnharmonic.intervalName);
     }

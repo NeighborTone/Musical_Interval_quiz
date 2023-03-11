@@ -84,7 +84,9 @@ public enum Accidental //臨時記号
 {
     Natural = 0,
     Sharp = 1,
+    // DoubleSharp = 2, //今のところ予定はない
     Flatto = -1,
+    // DoubleFlatto = -2, //今のところ予定はない
 }
 
 [System.Serializable]
