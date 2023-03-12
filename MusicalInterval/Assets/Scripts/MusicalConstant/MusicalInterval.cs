@@ -17,7 +17,6 @@ public struct MusicalInterval
         DoubleAugmented,    //重増
         DoubleDiminished,   //重減
         Tritone,            //三全音(増4,減5)
-        Unison,             //完全1度
     }
     
     /// <summary>
@@ -36,7 +35,7 @@ public struct MusicalInterval
     {
         get
         {
-            if(quality == MusicalQuality.Tritone || quality == MusicalQuality.Unison)
+            if(quality == MusicalQuality.Tritone)
             {
                 return  quality.ToString();
             }

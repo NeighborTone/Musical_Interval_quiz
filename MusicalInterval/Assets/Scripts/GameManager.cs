@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Toggle m_accidToggle;
     [SerializeField] TMP_Dropdown m_clefDropdown;
-    [SerializeField] TMP_Dropdown m_gualityDropdown;
+    [SerializeField] TMP_Dropdown m_qualityDropdown;
     [SerializeField] TMP_Dropdown m_degreeDropdown;
 
     [SerializeField] List<Note> m_leftNote = new(14);
@@ -144,8 +144,19 @@ public class GameManager : MonoBehaviour
         m_settingCanvas.SetActive(false);
     }
 
+    void ShowText(bool isShow)
+    {
+        m_correctionText.gameObject.SetActive(isShow);
+        m_intervalText.gameObject.SetActive(isShow);
+        m_semitoneText.gameObject.SetActive(isShow);
+        m_enharmonicIntervalText.gameObject.SetActive(isShow);
+        m_octaveText.gameObject.SetActive(m_octaveInterval > 0 && isShow ? true : false);
+        m_naturalIntervalText.gameObject.SetActive(isShow);
+    }
+
     public void InitQuiz()
     {
+        ShowText(false);
         SetClef();
         NoteAllHide();
         GenerateQuiz();
@@ -310,12 +321,6 @@ public class GameManager : MonoBehaviour
             CalcEnharmonic(hi_note_info, low_note_info);
         }
 
-        if(semitone_num == 0)
-        {
-            m_musicalInterval.quality = MusicalInterval.MusicalQuality.Unison;
-        }
-
-        m_octaveText.gameObject.SetActive(m_octaveInterval > 0 ? true : false);
         m_intervalText.SetText(m_musicalInterval.intervalName);
         m_semitoneText.SetText("半音{0}個", semitone_num);
 
@@ -416,10 +421,6 @@ public class GameManager : MonoBehaviour
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Perfect;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
-                if(semitone_num == 0)
-                {
-                    m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Unison;
-                }
             }
             //高い音にシャープかつ低い音にフラットで重増○度
             else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
@@ -437,10 +438,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 m_musicalIntervalEnharmonic = interval_not_accid;
-                if(semitone_num == 0)
-                {
-                    m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Unison;
-                }
             }
         }
         else if(interval_not_accid.quality == MusicalInterval.MusicalQuality.Major) //メジャー系
@@ -520,7 +517,7 @@ public class GameManager : MonoBehaviour
                 m_musicalIntervalEnharmonic = interval_not_accid;
             } 
         }
-        else //トライトーン(増4,減5)本当に以下の処理でいいのかかなり怪しい...プログラム的にはFとBのとき(増4度)にしか来ない？
+        else //トライトーン(増4,減5)プログラム的にはFとBのとき(増4度)にしか来ない？
         {
             //高い音にのみシャープ。または低い音にのみフラットなら重増4度？(完全5度の異名同音？)
             if(IsAugmented(hi_note_name_accid, low_note_name_accid))
@@ -564,11 +561,6 @@ public class GameManager : MonoBehaviour
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Tritone;
                 m_musicalIntervalEnharmonic.interval = 4;
             } 
-        }
-
-        if (semitone_num == 0)
-        {
-            interval_not_accid.quality = MusicalInterval.MusicalQuality.Unison;
         }
 
         m_naturalIntervalText.SetText("Natural:" + interval_not_accid.intervalName);
@@ -656,5 +648,42 @@ public class GameManager : MonoBehaviour
         });
 
         ClacMusicalInterval(left_note, right_note);
+    }
+
+    public void OnAnser()
+    {
+        ShowText(true);
+        var fix_degree = m_degreeDropdown.value +1;//0から始まるので1からになるように調整
+        if (!m_degreeDropdown.interactable && m_musicalInterval.quality == MusicalInterval.MusicalQuality.Tritone)
+        {
+            m_correctionText.SetText("正解!");
+        }
+        else if (m_qualityDropdown.value == (int)m_musicalInterval.quality ||
+                 m_qualityDropdown.value == (int)m_musicalIntervalEnharmonic.quality)
+        {
+           
+            if (fix_degree == m_musicalInterval.interval ||
+                fix_degree == m_musicalIntervalEnharmonic.interval)
+            {
+                m_correctionText.SetText("正解!");
+            }
+        }
+        else
+        {
+            m_correctionText.SetText("不正解!");
+        }
+
+    }
+
+    public void OnSelectTritone()
+    {
+        if(m_qualityDropdown.value == (int)MusicalInterval.MusicalQuality.Tritone)
+        {
+            m_degreeDropdown.interactable = false;
+        }
+        else
+        {
+            m_degreeDropdown.interactable = true;
+        }
     }
 }
