@@ -537,11 +537,17 @@ public class GameManager : MonoBehaviour
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Tritone;
                 m_musicalIntervalEnharmonic.interval = 4;
             }
-            //高い音にシャープかつ低い音にフラットで長3度？(完全4度から半音3つ分広がるので多分短6度でいいはず)
+            //高い音にシャープかつ低い音にフラットで完全4度から半音3つ分広がるので多分短6度でいいはず
             else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Minor;
                 m_musicalIntervalEnharmonic.interval = 6;
+
+                //このような音程はまず出てこないので問題から除外する。
+                InitQuiz();
+                GenerateQuiz();
+                
+                return;
             }
             //高い音にフラットかつ低い音にシャープで長3度？(完全4度から半音3つ分狭くなるので多分長3度でいいはず)
             else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
@@ -569,20 +575,20 @@ public class GameManager : MonoBehaviour
     void GenerateQuiz()
     {
   
-#if UNITY_EDITOR
-        //デバッグ用に特定の音を生成する
-        //ト音記号のみ
-        var left_index = 3;
-        var right_index = 6;
-        var left_note_name = NoteNames.F3;
-        var right_note_name = NoteNames.B3;
-        Accidental left_accid;
-        Accidental right_accid;
+// #if UNITY_EDITOR
+//         //デバッグ用に特定の音を生成する
+//         //ト音記号のみ
+//         var left_index = 3;
+//         var right_index = 6;
+//         var left_note_name = NoteNames.F3;
+//         var right_note_name = NoteNames.B3;
+//         Accidental left_accid;
+//         Accidental right_accid;
 
-        left_accid = Accidental.Sharp;
-        right_accid = Accidental.Natural;
+//         left_accid = Accidental.Sharp;
+//         right_accid = Accidental.Natural;
         
-#else
+// #else
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
         var right_index = UnityEngine.Random.Range(0, m_rightNote.Count);
         var left_note_name = GetIndexToNoteName(left_index);
@@ -601,9 +607,7 @@ public class GameManager : MonoBehaviour
             right_accid = Accidental.Natural;
         }
 
-#endif
-
-
+//#endif
 
         EqualTemperament left_temperament;
         EqualTemperament right_temperament;
