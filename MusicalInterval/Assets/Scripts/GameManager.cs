@@ -75,9 +75,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_enharmonicIntervalText;
     [SerializeField] TextMeshProUGUI m_semitoneText;
     [SerializeField] TextMeshProUGUI m_octaveText;
+    [SerializeField] TextMeshProUGUI m_correctionText;
 
     [SerializeField] Toggle m_accidToggle;
     [SerializeField] TMP_Dropdown m_clefDropdown;
+    [SerializeField] TMP_Dropdown m_gualityDropdown;
+    [SerializeField] TMP_Dropdown m_degreeDropdown;
 
     [SerializeField] List<Note> m_leftNote = new(14);
     [SerializeField] List<Note> m_rightNote = new(14);
