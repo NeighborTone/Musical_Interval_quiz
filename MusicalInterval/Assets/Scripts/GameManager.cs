@@ -85,12 +85,12 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 音程
     /// </summary>
-    [SerializeField] MusicalInterval m_musicalInterval;
+    MusicalInterval m_musicalInterval;
     
     /// <summary>
     /// 音程(異名同音用)
     /// </summary>
-    [SerializeField] MusicalInterval m_musicalIntervalEnharmonic;
+    MusicalInterval m_musicalIntervalEnharmonic;
 
     int m_octaveInterval = 0;
 
@@ -525,7 +525,7 @@ public class GameManager : MonoBehaviour
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
                 m_musicalIntervalEnharmonic.interval = 4;
             }
-            //高い音にのみフラット。または低い音にのみシャープなら減○度?(完全4度の異名同音？)
+            //高い音にのみフラット。または低い音にのみシャープなら完全4度?
             else if (IsDiminished(hi_note_name_accid, low_note_name_accid))
             {
                 m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Perfect;
@@ -546,8 +546,8 @@ public class GameManager : MonoBehaviour
             //高い音にフラットかつ低い音にシャープで長3度？(完全4度から半音3つ分狭くなるので多分長3度でいいはず)
             else if (IsDoubleDiminished(hi_note_name_accid, low_note_name_accid))
             {
-                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Major;
-                m_musicalIntervalEnharmonic.interval = 3;
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Diminished;
+                m_musicalIntervalEnharmonic.interval = 4;
             }            
             //臨時記号なし
             else
@@ -568,11 +568,25 @@ public class GameManager : MonoBehaviour
 
     void GenerateQuiz()
     {
+  
+#if UNITY_EDITOR
+        //デバッグ用に特定の音を生成する
+        //ト音記号のみ
+        var left_index = 3;
+        var right_index = 6;
+        var left_note_name = NoteNames.F3;
+        var right_note_name = NoteNames.B3;
+        Accidental left_accid;
+        Accidental right_accid;
+
+        left_accid = Accidental.Sharp;
+        right_accid = Accidental.Natural;
+        
+#else
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
         var right_index = UnityEngine.Random.Range(0, m_rightNote.Count);
         var left_note_name = GetIndexToNoteName(left_index);
         var right_note_name = GetIndexToNoteName(right_index);
-
         Accidental left_accid;
         Accidental right_accid;
 
@@ -586,6 +600,9 @@ public class GameManager : MonoBehaviour
             left_accid = Accidental.Natural;
             right_accid = Accidental.Natural;
         }
+
+#endif
+
 
 
         EqualTemperament left_temperament;

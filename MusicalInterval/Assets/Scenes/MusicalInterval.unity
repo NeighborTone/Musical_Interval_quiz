@@ -5182,12 +5182,6 @@ MonoBehaviour:
   - {fileID: 1312952587}
   - {fileID: 79566588}
   - {fileID: 1129538629}
-  m_musicalInterval:
-    quality: 0
-    interval: 0
-  m_musicalIntervalEnharmonic:
-    quality: 0
-    interval: 0
 --- !u!4 &710899964
 Transform:
   m_ObjectHideFlags: 0
