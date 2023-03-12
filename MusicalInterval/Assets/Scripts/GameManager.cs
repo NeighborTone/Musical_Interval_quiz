@@ -570,20 +570,20 @@ public class GameManager : MonoBehaviour
     void GenerateQuiz()
     {
   
-// #if UNITY_EDITOR
-//         //デバッグ用に特定の音を生成する
-//         //ト音記号のみ
-//         var left_index = 3;
-//         var right_index = 6;
-//         var left_note_name = NoteNames.F3;
-//         var right_note_name = NoteNames.B3;
-//         Accidental left_accid;
-//         Accidental right_accid;
+#if UNITY_EDITOR
+        //デバッグ用に特定の音を生成する
+        //ト音記号のみ
+        var left_index = 4;
+        var right_index = 1;
+        var left_note_name = NoteNames.G3;
+        var right_note_name = NoteNames.D3;
+        Accidental left_accid;
+        Accidental right_accid;
 
-//         left_accid = Accidental.Sharp;
-//         right_accid = Accidental.Natural;
+        left_accid = Accidental.Sharp;
+        right_accid = Accidental.Natural;
         
-// #else
+#else
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
         var right_index = UnityEngine.Random.Range(0, m_rightNote.Count);
         var left_note_name = GetIndexToNoteName(left_index);
@@ -602,7 +602,7 @@ public class GameManager : MonoBehaviour
             right_accid = Accidental.Natural;
         }
 
-//#endif
+#endif
 
         EqualTemperament left_temperament;
         EqualTemperament right_temperament;
@@ -666,6 +666,10 @@ public class GameManager : MonoBehaviour
                 fix_degree == m_musicalIntervalEnharmonic.interval)
             {
                 m_correctionText.SetText("正解!");
+            }
+            else
+            {
+                m_correctionText.SetText("不正解!");
             }
         }
         else
