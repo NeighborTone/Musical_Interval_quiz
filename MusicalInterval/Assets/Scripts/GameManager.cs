@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
 
 
     public bool IsAccidental { get {return m_accidToggle.isOn;} private set{} }
-
+    bool m_specialInterval = false;
     void NoteAllHide()
     {
         foreach (var note in m_leftNote)
@@ -319,6 +319,13 @@ public class GameManager : MonoBehaviour
                 hi_note_info = second;
                 low_note_info = first;
             }
+
+            if(m_specialInterval)
+            {
+                hi_note_info = second;
+                low_note_info = first;
+
+            }
             CalcEnharmonic(hi_note_info, low_note_info);
         }
         m_intervalText.SetText(m_musicalInterval.intervalName);
@@ -463,7 +470,7 @@ public class GameManager : MonoBehaviour
             //高い音にシャープかつ低い音にフラットで重増○度
             else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
             {
-                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleDiminished;
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
             }
             //高い音にフラットかつ低い音にシャープで減○度
@@ -573,10 +580,10 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         //デバッグ用に特定の音を生成する
         //ト音記号のみ
-        var left_index = 7;
-        var right_index = 12;
-        var left_note_name = NoteNames.C3;
-        var right_note_name = NoteNames.A3;
+        var left_index = 9;
+        var right_index = 10;
+        var left_note_name = NoteNames.E3;
+        var right_note_name = NoteNames.F3;
         Accidental left_accid;
         Accidental right_accid;
 
@@ -623,30 +630,30 @@ public class GameManager : MonoBehaviour
 
         left_note.gameObject.SetActive(true);
         right_note.gameObject.SetActive(true);
-        //m_specialInterval = false;
-        ////E# と F♭
-        ////B# と C♭
-        ////のときの特殊処理
-        //if ((left_alphabet_str == "E" && left_accid == Accidental.Sharp) &&
-        //    (right_alphabet_str == "F" && right_accid == Accidental.Flatto))
-        //{
-        //    m_specialInterval = true;
-        //}
-        //else if ((right_alphabet_str == "E" && right_accid == Accidental.Sharp) &&
-        //          (left_alphabet_str == "F" && left_accid == Accidental.Flatto))
-        //{
-        //    m_specialInterval = true;
-        //}
-        //else if ((left_alphabet_str == "B" && left_accid == Accidental.Sharp) &&
-        //        (right_alphabet_str == "C" && right_accid == Accidental.Flatto))
-        //{
-        //    m_specialInterval = true;
-        //}
-        //else if ((right_alphabet_str == "B" && right_accid == Accidental.Sharp) &&
-        //         (left_alphabet_str == "C" && left_accid == Accidental.Flatto))
-        //{
-        //    m_specialInterval = true;
-        //}
+        m_specialInterval = false;
+        //E# と F♭
+        //B# と C♭
+        //のときの特殊処理
+        if ((left_alphabet_str == "E" && left_accid == Accidental.Sharp) &&
+            (right_alphabet_str == "F" && right_accid == Accidental.Flatto))
+        {
+            m_specialInterval = true;
+        }
+        else if ((right_alphabet_str == "E" && right_accid == Accidental.Sharp) &&
+                  (left_alphabet_str == "F" && left_accid == Accidental.Flatto))
+        {
+            m_specialInterval = true;
+        }
+        else if ((left_alphabet_str == "B" && left_accid == Accidental.Sharp) &&
+                (right_alphabet_str == "C" && right_accid == Accidental.Flatto))
+        {
+            m_specialInterval = true;
+        }
+        else if ((right_alphabet_str == "B" && right_accid == Accidental.Sharp) &&
+                 (left_alphabet_str == "C" && left_accid == Accidental.Flatto))
+        {
+            m_specialInterval = true;
+        }
 
         left_temperament = GetNoteName(left_accid, left_alphabet_str, left_note_num_str);
         right_temperament = GetNoteName(right_accid, right_alphabet_str, right_note_num_str);
