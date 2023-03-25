@@ -100,7 +100,6 @@ public class GameManager : MonoBehaviour
 
 
     public bool IsAccidental { get {return m_accidToggle.isOn;} private set{} }
-    bool m_isPerfect_1 = false;
 
     void NoteAllHide()
     {
@@ -322,19 +321,7 @@ public class GameManager : MonoBehaviour
             }
             CalcEnharmonic(hi_note_info, low_note_info);
         }
-
-        if (m_isPerfect_1)
-        {
-            semitone_num = 0;
-            m_musicalInterval.quality = MusicalInterval.MusicalQuality.Perfect;
-            m_musicalInterval.interval = 0;
-            m_intervalText.SetText(MusicalQuality.Perfect.ToString() + "1");
-        }
-        else
-        {
-            m_intervalText.SetText(m_musicalInterval.intervalName);
-        }
-        
+        m_intervalText.SetText(m_musicalInterval.intervalName);
         m_semitoneText.SetText("半音{0}個", semitone_num);
 
     }
@@ -476,7 +463,7 @@ public class GameManager : MonoBehaviour
             //高い音にシャープかつ低い音にフラットで重増○度
             else if (IsDoubleAugmented(hi_note_name_accid, low_note_name_accid))
             {
-                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleAugmented;
+                m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.DoubleDiminished;
                 m_musicalIntervalEnharmonic.interval = interval_not_accid.interval;
             }
             //高い音にフラットかつ低い音にシャープで減○度
@@ -577,17 +564,7 @@ public class GameManager : MonoBehaviour
         }
 
         m_naturalIntervalText.SetText("Natural:" + interval_not_accid.intervalName);
-        if(m_isPerfect_1)
-        {
-            m_enharmonicIntervalText.SetText("Enharmonic:" + MusicalQuality.Perfect.ToString() + "1");
-            m_musicalIntervalEnharmonic.quality = MusicalInterval.MusicalQuality.Perfect;
-            m_musicalIntervalEnharmonic.interval = 0;
-        }
-        else
-        {
-            m_enharmonicIntervalText.SetText("Enharmonic:" + m_musicalIntervalEnharmonic.intervalName);
-        }
-        
+        m_enharmonicIntervalText.SetText("Enharmonic:" + m_musicalIntervalEnharmonic.intervalName);   
     }
 
     void GenerateQuiz()
@@ -596,15 +573,15 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         //デバッグ用に特定の音を生成する
         //ト音記号のみ
-        var left_index = 9;
-        var right_index = 9;
-        var left_note_name = NoteNames.E3;
-        var right_note_name = NoteNames.E3;
+        var left_index = 7;
+        var right_index = 12;
+        var left_note_name = NoteNames.C3;
+        var right_note_name = NoteNames.A3;
         Accidental left_accid;
         Accidental right_accid;
 
-        left_accid = Accidental.Natural;
-        right_accid = Accidental.Natural;
+        left_accid = Accidental.Sharp;
+        right_accid = Accidental.Flatto;
         
 #else
         var left_index = UnityEngine.Random.Range(0, m_leftNote.Count);
@@ -646,30 +623,30 @@ public class GameManager : MonoBehaviour
 
         left_note.gameObject.SetActive(true);
         right_note.gameObject.SetActive(true);
-        m_isPerfect_1 = false;
-        //E# と F♭
-        //B# と C♭
-        //のときの特殊処理
-        if ((left_alphabet_str == "E" && left_accid == Accidental.Sharp) &&
-            (right_alphabet_str == "F" && right_accid == Accidental.Flatto))
-        {
-            m_isPerfect_1 = true;
-        }
-        else if ((right_alphabet_str == "E" && right_accid == Accidental.Sharp) &&
-                  (left_alphabet_str == "F" && left_accid == Accidental.Flatto))
-        {
-            m_isPerfect_1 = true;
-        }
-        else if ((left_alphabet_str == "B" && left_accid == Accidental.Sharp) &&
-                (right_alphabet_str == "C" && right_accid == Accidental.Flatto))
-        {
-            m_isPerfect_1 = true;
-        }
-        else if ((right_alphabet_str == "B" && right_accid == Accidental.Sharp) &&
-                 (left_alphabet_str == "C" && left_accid == Accidental.Flatto))
-        {
-            m_isPerfect_1 = true;
-        }
+        //m_specialInterval = false;
+        ////E# と F♭
+        ////B# と C♭
+        ////のときの特殊処理
+        //if ((left_alphabet_str == "E" && left_accid == Accidental.Sharp) &&
+        //    (right_alphabet_str == "F" && right_accid == Accidental.Flatto))
+        //{
+        //    m_specialInterval = true;
+        //}
+        //else if ((right_alphabet_str == "E" && right_accid == Accidental.Sharp) &&
+        //          (left_alphabet_str == "F" && left_accid == Accidental.Flatto))
+        //{
+        //    m_specialInterval = true;
+        //}
+        //else if ((left_alphabet_str == "B" && left_accid == Accidental.Sharp) &&
+        //        (right_alphabet_str == "C" && right_accid == Accidental.Flatto))
+        //{
+        //    m_specialInterval = true;
+        //}
+        //else if ((right_alphabet_str == "B" && right_accid == Accidental.Sharp) &&
+        //         (left_alphabet_str == "C" && left_accid == Accidental.Flatto))
+        //{
+        //    m_specialInterval = true;
+        //}
 
         left_temperament = GetNoteName(left_accid, left_alphabet_str, left_note_num_str);
         right_temperament = GetNoteName(right_accid, right_alphabet_str, right_note_num_str);
@@ -716,10 +693,6 @@ public class GameManager : MonoBehaviour
         {//三全音チェック
             m_correctionText.SetText("正解!");
             return;
-        }
-        if(m_isPerfect_1 && fix_degree == 1)
-        {
-            fix_degree = 0;
         }
 
         if (m_qualityDropdown.value == (int)m_musicalInterval.quality)
